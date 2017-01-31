@@ -1,0 +1,2 @@
+INDEX VERSION 1.127+\\userserver.rg-bx.schule.suedtirol.it\Users\Students\stdeljak\Home\Desktop\TP\Program_Files\.metadata\.plugins\org.eclipse.jdt.core
+915408626.index
