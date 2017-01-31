@@ -21,6 +21,9 @@ public class Client {
         try {
             clientSocket = new Socket(ipAdress, port);
             System.out.println("Client auf port " + port + " verbunden");
+            System.out.println("Du kannst nun Berechnungen im folgenden Format an den Server versenden");
+            System.out.println("-> (zahl1/operator/zahl2) Beispiel: 1+5 oder 3426/54");
+            System.out.println("Gib nun deine Berechnungen ein:");
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
@@ -30,8 +33,8 @@ public class Client {
             while(running){
                 try {
                     String input = systemInput.readLine();
-                    System.out.println("Folgendes eingegeben: " + input);
                     out.println(input);
+                    System.out.println(in.readLine());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

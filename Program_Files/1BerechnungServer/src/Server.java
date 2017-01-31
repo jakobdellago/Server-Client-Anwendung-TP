@@ -38,7 +38,8 @@ public class Server {
             String s = null;
             do{
                 s = in.readLine();
-                System.out.println("Folgende Nachricht empfangen: " + s);
+                System.out.println("Folgende Berechnung empfangen: " + s + " = " + Calc.getResult(s));
+                out.println(Calc.getResult(s));
 
             }while(s!=null);
 
