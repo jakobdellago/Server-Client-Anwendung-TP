@@ -18,8 +18,8 @@ public class Calc {
 
 
         float zahl1 = Float.valueOf(values[0]);
-        float zahl2 = Float.valueOf(values[2]);
-        String operator = values[1];
+        float zahl2 = Float.valueOf(values[1]);
+        String operator = input.substring(values[0].length(), values[0].length()+1);
 
         if(operator.equals("+")){
             return zahl1+zahl2;
