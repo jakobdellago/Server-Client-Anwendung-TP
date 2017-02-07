@@ -36,18 +36,27 @@ public class Server {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             String s = null;
-            do{
+            do {
                 s = in.readLine();
-                System.out.println("Folgende Berechnung empfangen: " + s + " = " + Calc.getResult(s));
-                out.println(Calc.getResult(s));
-
-            }while(s!=null);
+                try{
+                    Float result = Calc.getResult(s);
+                    System.out.println("Folgende Berechnung empfangen: " + s + " = " + result);
+                    out.println(result);
+                }catch(NumberFormatException ne) {
+                    System.out.println("Warnung: Falsche Eingabeparameter empfangen");
+                    out.println("Falsche Parameter bei der Eingabe");
+                }catch(ArrayIndexOutOfBoundsException aioobe){
+                    System.out.println("Warnung: Falsche Eingabeparameter empfangen");
+                    out.println("Falsche Parameter bei der Eingabe (Fehlender Operator, fehlende Zahl?)");
+                }
+            } while (s != null);
 
 
             in.close();
             out.close();
             socket.close();
-        } catch (IOException e) {
+
+        }catch (IOException e) {
             e.printStackTrace();
         }
 

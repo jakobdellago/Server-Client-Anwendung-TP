@@ -29,7 +29,7 @@ public class Calc {
             return zahl1*zahl2;
         } else if (operator.equals("/")) {
             return zahl1 / zahl2;
-        } else throw new IOException("Operator existiert nicht!");
+        } else throw new IOException("Falsche Eingabe: Wert konnte nicht berechnet werden!");
 
 
     }
