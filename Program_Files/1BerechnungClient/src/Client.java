@@ -1,41 +1,46 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class Client {
 
     private Socket clientSocket;
+    private int port;
+    private String ipAdress;
     private boolean running=true;
 
     /*
     Ru
      */
-    public Client(int port) {
-    	connect("127.0.0.1", port);
+    public Client(String ipAdress, int port) {
+        this.port=port;
+    	this.ipAdress=ipAdress;
+        connect();
     }
 
-    public void connect(String ipAdress, int port){
+    public void connect(){
 
         try {
             clientSocket = new Socket(ipAdress, port);
-            System.out.println("Client auf port " + port + " verbunden");
-            System.out.println("Du kannst nun Berechnungen im folgenden Format an den Server versenden");
-            System.out.println("-> (zahl1/operator/zahl2) Beispiel: 1+5 oder 3426/54");
-            System.out.println("Gib nun deine Berechnungen ein:");
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-            InputStreamReader isr = new InputStreamReader(System.in);
-            BufferedReader systemInput = new BufferedReader(isr);
+            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+            ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+
+
+            output("verbindung");
 
             while(running){
                 try {
                     String input = systemInput.readLine();
-                    out.println(input);
-                    System.out.println(in.readLine());
+                    CalcMsg calcMsg = new CalcMsg(input);
+
+                    out.writeObject(calcMsg);
+
+                    in.readObject();
+
+
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
@@ -47,5 +52,19 @@ public class Client {
 
 
     }
+
+    public void output(String inhalt){
+        if(inhalt.equals("verbindung")){
+            System.out.println("Client auf port " + port + " erfolgreich verbunden");
+            System.out.println("Du kannst nun Berechnungen im folgenden Format an den Server versenden");
+            System.out.println("-> (zahl1/operator/zahl2) Beispiel: 1+5 oder 3426/54");
+            System.out.println("Gib nun deine Berechnungen ein:");
+        }
+    }
+
+    public float calc(){
+
+    }
+
     
 }    

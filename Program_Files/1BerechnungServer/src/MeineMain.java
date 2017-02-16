@@ -5,11 +5,6 @@ public class MeineMain {
 
     public static void main(String[] args) {
 
-        try{
-
-        } catch (NumberFormatException ne){
-
-        }
         Server server = new Server(9999);
 
 
