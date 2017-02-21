@@ -27,6 +27,19 @@ public class Connection implements Runnable{
             out.flush();
             in = new ObjectInputStream(socket.getInputStream());
             Message input = null;
+
+            //Authentifizierung:
+            String password = "1234";
+            AuthMsg authMsg = (AuthMsg) in.readObject();
+            while(!authMsg.getPassword().equals(password)){
+                out.writeObject(new AuthMsg(null));
+                authMsg = (AuthMsg) in.readObject();
+            }
+
+            out.writeObject(authMsg);
+            out.flush();
+
+
             do {
                 input = (Message) in.readObject();
                 //Reagiert auf eine Message vom typ 'calc'

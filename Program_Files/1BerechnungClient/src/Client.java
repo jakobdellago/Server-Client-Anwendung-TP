@@ -26,6 +26,22 @@ public class Client {
             out.flush();
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 
+            //Authentifizierung:
+            System.out.print("Passwort:");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String password = reader.readLine();
+            out.writeObject(new AuthMsg(password));
+            out.flush();
+
+            //Wenn die AuthMsg mit null als passwort zurückkommt dann ist die Anmeldung fehlgeschlagen
+            AuthMsg authMsg = (AuthMsg) in.readObject();
+            while(authMsg.getPassword()==null){
+                System.out.println("Falsches Passwort");
+                System.out.print("Passwort:");
+                out.writeObject(new AuthMsg(reader.readLine()));
+                out.flush();
+                authMsg = (AuthMsg) in.readObject();
+            }
 
             output("verbindung");
 
@@ -36,6 +52,7 @@ public class Client {
                     CalcMsg calcMsg = new CalcMsg(input);
 
                     out.writeObject(calcMsg);
+                    out.flush();
 
                     try {
                         ResultMsg result = (ResultMsg) in.readObject();
@@ -47,6 +64,9 @@ public class Client {
 
                 }catch (SocketException se){
                     System.out.println("Server wurde geschlossen.. ");
+                    in.close();
+                    out.close();
+                    clientSocket.close();
                     return;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -56,8 +76,10 @@ public class Client {
             }
 
         }catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Es existiert kein Server, bzw. kein Port");
             return;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
 
@@ -66,10 +88,11 @@ public class Client {
     public void output(String inhalt){
         if(inhalt.equals("verbindung")){
             System.out.println("Client auf port " + port + " erfolgreich verbunden");
-            System.out.println("Du kannst nun Berechnungen im folgenden Format an den Server versenden");
+            System.out.println("Du kannst nun Berechnungen im folgenden Format an den Server versenden:");
             System.out.println("-> (zahl1/operator/zahl2) Beispiel: 1+5 oder 3426/54");
             System.out.println("Gib nun deine Berechnungen ein:");
         }
+
     }
 
     
