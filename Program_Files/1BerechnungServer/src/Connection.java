@@ -15,18 +15,22 @@ public class Connection implements Runnable{
         this.socket=socket;
     }
 
+
+    //Kümmert sich um die existierenden Verbindungen
     @Override
     public void run() {
         System.out.println("Client hat sich verbunden");
+        ObjectOutputStream out=null;
+        ObjectInputStream in=null;
         try {
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
             out.flush();
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            in = new ObjectInputStream(socket.getInputStream());
             Message input = null;
-
             do {
                 input = (Message) in.readObject();
-                //Reagiert auf eine Message vom typ 'calc' // Returnt null falls die Eingabe nicht dem richtigem Format entspricht
+                //Reagiert auf eine Message vom typ 'calc'
+                //Schickt null durch den Outputstream falls die Eingabe nicht dem richtigem Format entspricht
                 if (input.getType().equals("calc")) {
                     CalcMsg calcMsg = (CalcMsg) input;
                     try {
@@ -43,17 +47,21 @@ public class Connection implements Runnable{
                 }
             } while (!input.equals(null));
 
-            in.close();
-            out.close();
-            socket.close();
-
         }catch (SocketException se){
             System.out.println("Client hat sich abgemeldet");
+            try {
+                in.close();
+                out.close();
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
 
     }
 }
