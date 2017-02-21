@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class Client {
 
@@ -8,9 +9,7 @@ public class Client {
     private String ipAdress;
     private boolean running=true;
 
-    /*
-    Ru
-     */
+
     public Client(String ipAdress, int port) {
         this.port=port;
     	this.ipAdress=ipAdress;
@@ -22,22 +21,33 @@ public class Client {
         try {
             clientSocket = new Socket(ipAdress, port);
 
-            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+            out.flush();
+            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 
 
             output("verbindung");
 
             while(running){
                 try {
-                    String input = systemInput.readLine();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                    String input = br.readLine();
                     CalcMsg calcMsg = new CalcMsg(input);
 
                     out.writeObject(calcMsg);
 
-                    in.readObject();
+                    try {
+                        ResultMsg result = (ResultMsg) in.readObject();
+                        System.out.println(result.getValue());
+                    } catch (NullPointerException npe) {
+                        System.out.println("Falsches Eingabeformat");
+                    }
 
 
+                }catch (SocketException se){
+                    System.out.println("Server wurde geschlossen.. ");
+                    return;
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
@@ -60,10 +70,6 @@ public class Client {
             System.out.println("-> (zahl1/operator/zahl2) Beispiel: 1+5 oder 3426/54");
             System.out.println("Gib nun deine Berechnungen ein:");
         }
-    }
-
-    public float calc(){
-
     }
 
     

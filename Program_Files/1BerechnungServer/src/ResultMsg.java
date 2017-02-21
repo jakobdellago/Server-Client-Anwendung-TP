@@ -1,7 +1,7 @@
 /**
  * Created by stdeljak on 13.02.2017.
  */
-public class ResultMsg extends Message{
+public class ResultMsg extends Message {
 
     private Float value;
 
