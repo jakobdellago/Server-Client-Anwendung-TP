@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="1BerechnungServer:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/1BerechnungServer_jar</output-path>
+    <root id="archive" name="1BerechnungServer.jar">
+      <element id="module-output" name="1BerechnungServer" />
+    </root>
+  </artifact>
+</component>
